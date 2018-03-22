@@ -8,7 +8,9 @@ activate_virtualenv() {
         virtualenv -p $(which python3) "${THIS_DIR}/venv"
     fi
 
+    set +u
     . ${THIS_DIR}/venv/bin/activate
+    set -u
 
     pip install -r ${THIS_DIR}/requirements.txt
 }
