@@ -1,0 +1,63 @@
+#!/bin/sh -eu
+
+THIS_DIR=$(dirname $0)
+REPO_DIRECTORY=${THIS_DIR}/../dataset-ico-penalties-pdfs
+
+activate_virtualenv() {
+    if [ ! -f "%{THIS_DIR}/venv/bin/activate " ]; then
+        virtualenv -p $(which python3) "${THIS_DIR}/venv"
+    fi
+
+    . ${THIS_DIR}/venv/bin/activate
+
+    pip install -r ${THIS_DIR}/requirements.txt
+}
+
+delete_everything_from_repo() {
+    rm "${REPO_DIRECTORY}/*.json"
+    rm "${REPO_DIRECTORY}/pdfs/*.pdf"
+}
+
+delete_cache() {
+    rm -f "${THIS_DIR}/cache.sqlite"
+}
+
+scrape_latest_pdfs() {
+    ${THIS_DIR}/scrape.py "${REPO_DIRECTORY}"
+}
+
+commit_changes() {
+    SUMMARY_FILE=$(mktemp)
+
+    cd "${REPO_DIRECTORY}"
+    git add --all .
+
+    echo "Update $(date)" > $SUMMARY_FILE
+    echo >> $SUMMARY_FILE
+    echo "Crawled https://ico.org.uk/action-weve-taken/enforcement/" >> $SUMMARY_FILE
+    echo >> $SUMMARY_FILE
+    git diff --staged --name-status  >> $SUMMARY_FILE
+
+    git commit --file ${SUMMARY_FILE} --author "ICO PDF crawler <hello@projectsbyif.com>"
+    cd -
+
+    rm $SUMMARY_FILE
+}
+
+source_settings() {
+    . ${THIS_DIR}/settings.sh
+}
+
+push_to_github() {
+    cd "${REPO_DIRECTORY}"
+    git remote set-url --push origin https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/${GITHUB_USERNAME}/${GITHUB_REPO}
+    git push origin master:master
+    cd -
+}
+
+activate_virtualenv
+delete_cache
+scrape_latest_pdfs
+commit_changes
+source_settings
+push_to_github
