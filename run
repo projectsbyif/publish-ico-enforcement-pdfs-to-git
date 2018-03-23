@@ -19,8 +19,8 @@ activate_virtualenv() {
 }
 
 delete_everything_from_repo() {
-    rm "${REPO_DIRECTORY}/*.json"
-    rm "${REPO_DIRECTORY}/pdfs/*.pdf"
+    rm -f "${REPO_DIRECTORY}/*.json"
+    rm -f "${REPO_DIRECTORY}/pdfs/*.pdf"
 }
 
 sync_to_remote_master() {
