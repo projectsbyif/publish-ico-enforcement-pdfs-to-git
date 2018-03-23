@@ -23,6 +23,14 @@ delete_everything_from_repo() {
     rm "${REPO_DIRECTORY}/pdfs/*.pdf"
 }
 
+sync_to_remote_master() {
+    cd "${REPO_DIRECTORY}"
+    git fetch
+    git checkout master
+    git reset --hard origin/master
+    cd -
+}
+
 delete_cache() {
     rm -f "${THIS_DIR}/cache.sqlite"
 }
@@ -62,6 +70,8 @@ push_to_github() {
 
 activate_virtualenv
 delete_cache
+sync_to_remote_master
+delete_everything_from_repo
 scrape_latest_pdfs
 commit_changes
 source_settings
