@@ -4,7 +4,7 @@ THIS_DIR=$(dirname $0)
 REPO_DIRECTORY=${THIS_DIR}/../dataset-ico-penalties-pdfs
 
 
-GIT_AUTHOR="ICO Log Publisher Robot <hello@projectsbyif.com"
+GIT_AUTHOR="ICO Log Publisher Robot <hello@projectsbyif.com>"
 
 activate_virtualenv() {
     if [ ! -f "%{THIS_DIR}/venv/bin/activate " ]; then
