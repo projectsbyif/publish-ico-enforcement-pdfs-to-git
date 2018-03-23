@@ -3,6 +3,9 @@
 THIS_DIR=$(dirname $0)
 REPO_DIRECTORY=${THIS_DIR}/../dataset-ico-penalties-pdfs
 
+
+GIT_AUTHOR="ICO Log Publisher Robot <hello@projectsbyif.com"
+
 activate_virtualenv() {
     if [ ! -f "%{THIS_DIR}/venv/bin/activate " ]; then
         virtualenv -p $(which python3) "${THIS_DIR}/venv"
@@ -40,7 +43,7 @@ commit_changes() {
     echo >> $SUMMARY_FILE
     git diff --staged --name-status  >> $SUMMARY_FILE
 
-    git commit --file ${SUMMARY_FILE} --author "ICO PDF crawler <hello@projectsbyif.com>"
+    git commit --file ${SUMMARY_FILE} --author "${GIT_AUTHOR}"
     cd -
 
     rm $SUMMARY_FILE
